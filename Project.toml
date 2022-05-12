@@ -3,6 +3,10 @@ uuid = "0557c781-326a-4863-afd7-1b2a65d2f2ff"
 authors = ["Mechanomy LLC"]
 version = "0.1.0"
 
+[deps]
+KeywordDispatch = "5888135b-5456-5c80-a1b6-c91ef8180460"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+
 [compat]
 julia = "1"
 
