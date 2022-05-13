@@ -35,6 +35,7 @@ See [test/runtests.jl](test/runtests.jl) for additional usage examples.
 ```julia
 using Spiral2D
 using Plots
+using Unitful
 
 s = Spiral(a0=45u"°", a1=900u"°", r0=3u"mm", r1=4u"mm", pitch=0.5u"mm/rad") # counterclockwise spiral starting at r0=3mm and a0=45deg, terminating at r1=3mm and a1=900deg, with 0.5 
 (xs,ys) = seriesCartesian(s, 1000)
