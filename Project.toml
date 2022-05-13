@@ -8,6 +8,7 @@ KeywordDispatch = "5888135b-5456-5c80-a1b6-c91ef8180460"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
+Unitful = "1"
 julia = "1"
 
 [extras]
