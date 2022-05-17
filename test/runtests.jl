@@ -9,14 +9,14 @@ using Pkg
 Pkg.activate( normpath(joinpath(@__DIR__, "..")) ) #activate this package
 using Test
 using Spiral2D
-using Unitful
+using Unitful, Unitful.DefaultSymbols
 
 @testset "Spiral2D.jl number constructors" begin
     s1 = Spiral(1.1, 2.2, 3.3, 4.4, 0.1)
     @test s1.a0 == 1.1
 
     s3 = Spiral(1.1, 2.2, 3.3, 4.4)
-    @test abs(s3.pitch - 1)<1e-4
+    @test isapprox(s3.pitch, 1)
 end
 
 @testset "Spiral2D.jl unitful constructors" begin
@@ -25,8 +25,7 @@ end
     @test s1.a0 == s2.a0
 
     s3 = Spiral(180u"°", 2.2u"°",3.3u"m",4.4u"m")
-    # @show uconvert(u"m/rad", s3.pitch)
-    @test abs(s3.pitch - 0.35447u"m/rad")<1e-4u"m/rad" #-0.35 is less than elegant, but rev is only defined in Spiral2D...not fixing unitful here
+    @test isapprox( uconvert(u"m/rad", s3.pitch), 0.35447u"m/rad", rtol=1e-4) #0.35 is less than elegant, but rev is only defined in Spiral2D...not fixing unitful here
 end
 
 @testset "Spiral2D.jl mixed type constructor" begin
@@ -43,7 +42,7 @@ end
     @test s2.a1 == deg2rad(2.2)
 
     s3 = Spiral(a0=180u"°", a1=2.2u"°", r0=3.3u"m", r1=4.4u"m" )
-    @test abs(s3.pitch - 0.35447u"m/rad") < 1e-4u"m/rad" 
+    @test isapprox( uconvert(u"m/rad", s3.pitch), 0.35447u"m/rad", rtol=1e-4)
 end
 
 @testset "Spiral2D.jl calcPitch()" begin
@@ -56,7 +55,7 @@ end
 
     #unitful => unitful
     s1 = Spiral(a0=1.1u"°", a1=2.2u"°", r0=3.3u"m", r1=4.4u"m")
-    @test abs(calcPitch(s1) - 1u"m/°") < 1e-4u"m/°"
+    @test isapprox( calcPitch(s1), 1u"m/°")
 
     # pitch sign convention
     s2 = Spiral(a0=1.1u"°", a1=2.2u"°", r0=3.3u"m", r1=4.4u"m")
@@ -89,17 +88,16 @@ end
     @test_logs (:warn, "Spiral2D.calcLength() given r1=$(s1.r1), coerced to 0 as r1 < 0 is nonsensical.") calcLength(s1)
 
     s2 = Spiral(a0=1.1u"°", a1=1.1u"°", r0=3.3u"m", r1=4.4u"m", pitch=5.5u"mm/rad") #straight line
-    @test abs(calcLength(s2) - 1.1u"m") < 1e-4u"m"
+    @test isapprox( calcLength(s2), 1.1m )
 
     s3 = Spiral(a0=0u"°", a1=360u"°", r0=3.3u"m", r1=3.3u"m") #circle circumference
-    @test abs(calcLength(s3) - 2*π*3.3u"m") < 1e-4u"m"
+    @test isapprox( calcLength(s3), 2*π*3.3m )
 
     s4 = Spiral(a0=0u"°", a1=360u"°", r0=3.3u"m", r1=4.4u"m") #length is the average circumference
-    @test abs(calcLength(s4) - π*3.3u"m" - π*4.4u"m") < 1e-4u"m"
+    @test isapprox( calcLength(s4), π*3.3m + π*4.4m )
 
     s5 = Spiral(a0=0u"°", a1=-360u"°", r0=3.3u"m", r1=4.4u"m") #ccw == cw lengths
     @test isapprox( calcLength(s4), calcLength(s5))
-    # @test abs(calcLength(s5) - π*3.3u"m" - π*4.4u"m") < 1e-4u"m"
 end
 
 @testset "Spiral2D.jl seriesPolar()" begin # not a great test tbh
