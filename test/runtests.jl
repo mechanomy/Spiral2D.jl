@@ -1,3 +1,10 @@
+# MIT License
+# Copyright (c) 2022 Mechanomy LLC
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
 using Pkg
 Pkg.activate( normpath(joinpath(@__DIR__, "..")) ) #activate this package
 using Test
@@ -89,7 +96,10 @@ end
 
     s4 = Spiral(a0=0u"°", a1=360u"°", r0=3.3u"m", r1=4.4u"m") #length is the average circumference
     @test abs(calcLength(s4) - π*3.3u"m" - π*4.4u"m") < 1e-4u"m"
-    @test abs(calcLength(s4) - π*3.3u"m" - π*4.4u"m") < 1e-4u"m"
+
+    s5 = Spiral(a0=0u"°", a1=-360u"°", r0=3.3u"m", r1=4.4u"m") #ccw == cw lengths
+    @test isapprox( calcLength(s4), calcLength(s5))
+    # @test abs(calcLength(s5) - π*3.3u"m" - π*4.4u"m") < 1e-4u"m"
 end
 
 @testset "Spiral2D.jl seriesPolar()" begin # not a great test tbh

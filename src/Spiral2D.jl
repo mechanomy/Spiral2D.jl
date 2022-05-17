@@ -87,7 +87,6 @@ function calcLength(a0::AngleOrNumber, a1::AngleOrNumber, r0::LengthOrNumber, r1
   if r1 < 0*unit(r1)
     @warn "Spiral2D.calcLength() given r1=$r1, coerced to 0 as r1 < 0 is nonsensical."
     r1 = 0*unit(r1)
-
   end
 
   if a0 == a1 && r0 != r1 # a straight, radial line
@@ -96,7 +95,7 @@ function calcLength(a0::AngleOrNumber, a1::AngleOrNumber, r0::LengthOrNumber, r1
 
   # this is likely approximate, see https://www.engineeringtoolbox.com/spiral-length-d_2191.html 
   if 0*unit(r1) < r1
-    return  ustrip(u"rad", (a1-a0)/2) * (r1+r0) 
+    return  abs( ustrip(u"rad", (a1-a0)/2) * (r1+r0) )
   else 
     return 0*unit(r0)
   end
